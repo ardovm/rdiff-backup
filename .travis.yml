@@ -51,10 +51,11 @@ matrix:
      script:
        - python setup.py bdist
        - PyInstaller --onefile --distpath dist/win32 --paths=build/lib.win32-* --add-data=src/rdiff_backup.egg-info/PKG-INFO\;rdiff_backup.egg-info --console build/scripts-*/rdiff-backup
+       - ls -lR dist/win32
      deploy:
        provider: releases
        file_glob: true
-       file: dist/win32/rdiff-backup.exe
+       file: dist/win32/*
        skip_cleanup: true
        draft: true
        on:
