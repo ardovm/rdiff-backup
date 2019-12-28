@@ -54,7 +54,7 @@ matrix:
      before_deploy:
        - cp CHANGELOG COPYING README.md docs/FAQ.md docs/examples.md docs/DEVELOP.md docs/Windows-README.md dist/win32
        - pushd dist/win32
-       - 7z -a -tzip rdiff_backup.zip *
+       - 7z a -tzip rdiff_backup.zip *
        - popd
      deploy:
        provider: releases
