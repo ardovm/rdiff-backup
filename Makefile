@@ -43,7 +43,7 @@ wheel:
 	# Prepare wheel for deployment.
 	# See the notes for target "build"
 	${RUN_COMMAND} ./setup.py bdist_wheel
-	${RUN_COMMAND} auditwheel repair dist/*.whl
+	# FIXME ${RUN_COMMAND} auditwheel repair dist/*.whl
 
 container:
 	# Build development image
