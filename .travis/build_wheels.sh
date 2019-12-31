@@ -5,7 +5,7 @@ set -e -x
 yum install -y librsync-devel
 
 # Compile wheels
-for PYBIN in /opt/python/*/bin; do
+for PYBIN in /opt/python/cp3*/bin; do
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
 done
 
@@ -15,6 +15,6 @@ for whl in wheelhouse/*.whl; do
 done
 
 # Install packages
-for PYBIN in /opt/python/*/bin/; do
+for PYBIN in /opt/python/cp3*/bin/; do
     "${PYBIN}/pip" install rdiff-backup --no-index -f /io/wheelhouse
 done
