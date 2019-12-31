@@ -3,13 +3,13 @@ language: python
 os: linux
 dist: bionic
 
-# FIXME install: pip3 install --upgrade pip tox pyxattr pylibacl setuptools-scm auditwheel
+install: pip3 install --upgrade pip tox pyxattr pylibacl setuptools-scm auditwheel
 
-# FIXME python:
-# FIXME   - 3.5
-# FIXME   - 3.6
-# FIXME   - 3.7
-# FIXME   - 3.8
+python:
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 
 deploy:
   provider: releases
@@ -69,6 +69,7 @@ matrix:
        on:
           all_branches: true
    # Build and deploy Linux wheels using manylinux Docker containers
+   # avoiding manylinux2014_i686 because it does not provide librsync-devel
    - os: linux
      sudo: required
      services:
@@ -131,20 +132,7 @@ matrix:
      script:
        - docker run --rm -e PLAT=$PLAT -v `pwd`:/io $DOCKER_IMAGE $PRE_CMD /io/.travis/build_wheels.sh
        - ls wheelhouse/
-   - os: linux
-     sudo: required
-     services:
-       - docker
-     env: DOCKER_IMAGE=quay.io/pypa/manylinux2014_i686
-          PRE_CMD=linux32
-          PLAT=manylinux2014_i686
-          MAKE_STEP=bdist_wheel
-     install:
-       - docker pull $DOCKER_IMAGE
-     script:
-       - docker run --rm -e PLAT=$PLAT -v `pwd`:/io $DOCKER_IMAGE $PRE_CMD /io/.travis/build_wheels.sh
-       - ls wheelhouse/
-   
+
 # Don't run tests on WIP branches
 branches:
   except:
@@ -168,20 +156,20 @@ addons:
 #  - make container
 
 # Each env becomes a separate job. Add more Python versions to have a matrix.
-# FIXME env:
-# FIXME   - MAKE_STEP=test-static RUN_COMMAND= SUDO=sudo
-# FIXME   - MAKE_STEP=build RUN_COMMAND= SUDO=sudo
-# FIXME   - MAKE_STEP=test-runtime-base RUN_COMMAND= SUDO=sudo
-# FIXME   - MAKE_STEP=test-runtime-root RUN_COMMAND= SUDO=root  # see below
-# FIXME   - MAKE_STEP=test-runtime-slow RUN_COMMAND= SUDO=sudo
+env:
+  - MAKE_STEP=test-static RUN_COMMAND= SUDO=sudo
+  - MAKE_STEP=build RUN_COMMAND= SUDO=sudo
+  - MAKE_STEP=test-runtime-base RUN_COMMAND= SUDO=sudo
+  - MAKE_STEP=test-runtime-root RUN_COMMAND= SUDO=root  # see below
+  - MAKE_STEP=test-runtime-slow RUN_COMMAND= SUDO=sudo
 
-# FIXME script:
-# FIXME   # We need the following line because travis runs already in a virtualenv
-# FIXME   # and tox as well, so that we need to use tricks to run as root
-# FIXME   # Especially the env is set _before_ the virtualenv is joined so that
-# FIXME   # the next line doesn't work in the "env" section
-# FIXME   - if [[ $SUDO == root ]]; then export SUDO="sudo -E env PATH=$PATH"; fi
-# FIXME   - make $MAKE_STEP
+script:
+  # We need the following line because travis runs already in a virtualenv
+  # and tox as well, so that we need to use tricks to run as root
+  # Especially the env is set _before_ the virtualenv is joined so that
+  # the next line doesn't work in the "env" section
+  - if [[ $SUDO == root ]]; then export SUDO="sudo -E env PATH=$PATH"; fi
+  - make $MAKE_STEP
 
 # Travis-CI cannot cache the plain testfiles due to permission errors, thus we
 # have the .tar.gz stored in the cache dir to avoid too many re-downloads.
