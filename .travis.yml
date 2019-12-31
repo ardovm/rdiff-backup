@@ -3,18 +3,18 @@ language: python
 os: linux
 dist: bionic
 
-install: pip3 install --upgrade pip tox pyxattr pylibacl setuptools-scm auditwheel
+# FIXME install: pip3 install --upgrade pip tox pyxattr pylibacl setuptools-scm auditwheel
 
-python:
-  - 3.5
-  - 3.6
-  - 3.7
-  - 3.8
+# FIXME python:
+# FIXME   - 3.5
+# FIXME   - 3.6
+# FIXME   - 3.7
+# FIXME   - 3.8
 
 deploy:
   provider: releases
   file_glob: true
-  file: dist/*
+  file: wheelhouse/*.whlx
   skip_cleanup: true
   draft: true
   api_key:
@@ -24,8 +24,6 @@ deploy:
     condition: $MAKE_STEP = bdist_wheel
 
 matrix:
-  exclude:
-   - os: linux # FIXME so we only test what we care about
   include:
    # Build and deploy Windows executable
    - os: windows
@@ -106,20 +104,20 @@ addons:
 #  - make container
 
 # Each env becomes a separate job. Add more Python versions to have a matrix.
-env:
-  - MAKE_STEP=test-static RUN_COMMAND= SUDO=sudo
-  - MAKE_STEP=build RUN_COMMAND= SUDO=sudo
-  - MAKE_STEP=test-runtime-base RUN_COMMAND= SUDO=sudo
-  - MAKE_STEP=test-runtime-root RUN_COMMAND= SUDO=root  # see below
-  - MAKE_STEP=test-runtime-slow RUN_COMMAND= SUDO=sudo
+# FIXME env:
+# FIXME   - MAKE_STEP=test-static RUN_COMMAND= SUDO=sudo
+# FIXME   - MAKE_STEP=build RUN_COMMAND= SUDO=sudo
+# FIXME   - MAKE_STEP=test-runtime-base RUN_COMMAND= SUDO=sudo
+# FIXME   - MAKE_STEP=test-runtime-root RUN_COMMAND= SUDO=root  # see below
+# FIXME   - MAKE_STEP=test-runtime-slow RUN_COMMAND= SUDO=sudo
 
-script:
-  # We need the following line because travis runs already in a virtualenv
-  # and tox as well, so that we need to use tricks to run as root
-  # Especially the env is set _before_ the virtualenv is joined so that
-  # the next line doesn't work in the "env" section
-  - if [[ $SUDO == root ]]; then export SUDO="sudo -E env PATH=$PATH"; fi
-  - make $MAKE_STEP
+# FIXME script:
+# FIXME   # We need the following line because travis runs already in a virtualenv
+# FIXME   # and tox as well, so that we need to use tricks to run as root
+# FIXME   # Especially the env is set _before_ the virtualenv is joined so that
+# FIXME   # the next line doesn't work in the "env" section
+# FIXME   - if [[ $SUDO == root ]]; then export SUDO="sudo -E env PATH=$PATH"; fi
+# FIXME   - make $MAKE_STEP
 
 # Travis-CI cannot cache the plain testfiles due to permission errors, thus we
 # have the .tar.gz stored in the cache dir to avoid too many re-downloads.
