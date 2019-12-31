@@ -24,6 +24,8 @@ deploy:
     condition: $MAKE_STEP = bdist_wheel
 
 matrix:
+  exclude:
+   - os: linux # FIXME so we only test what we care about
   include:
    # Build and deploy Windows executable
    - os: windows
