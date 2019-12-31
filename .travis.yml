@@ -75,7 +75,7 @@ matrix:
        - docker
      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
           PLAT=manylinux1_x86_64
-          MAKE_STEP = bdist_wheel
+          MAKE_STEP=bdist_wheel
      install:
        - docker pull $DOCKER_IMAGE
      script:
