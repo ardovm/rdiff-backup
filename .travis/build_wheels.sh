@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 set -e -x
+
+pybindirs=/opt/python/cp3{5,6,7,8}*
 
 # Install a system package required by our library
 yum install -y librsync-devel
 
 # Compile wheels
-for PYBIN in /opt/python/cp3*/bin; do
+for PYBIN in $pybindirs; do
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
 done
 
@@ -15,6 +17,6 @@ for whl in wheelhouse/*.whl; do
 done
 
 # Install packages
-for PYBIN in /opt/python/cp3*/bin/; do
+for PYBIN in $pybindirs; do
     "${PYBIN}/pip" install rdiff-backup --no-index -f /io/wheelhouse
 done
